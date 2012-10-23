@@ -6,8 +6,11 @@ Main SBT Commands
 -----------------
 
 > ./sbt compile  # compile the source code
+
 > ./sbt run      # run the project's main class
+
 > ./sbt clean    # clean all compiled files, etc
+
 > ./sbt console  # open a REPL with all the project libraries loaded
 
 
