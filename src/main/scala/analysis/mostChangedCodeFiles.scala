@@ -8,7 +8,7 @@ class MostChangedCodeFileAnalyzer extends Analyzer {
     val desc = "Code File With Biggest Number of Checkins"
 
     def apply(data: RepoData, sc: SparkContext) = {
-        val codeExtensions = List("java", "rb", "js", "htm", "html", "jsp")
+        val codeExtensions = List("java", "rb", "js", "htm", "html", "jsp", "css")
 
         Result(Seq("file", "checkins"),
             data.commits
