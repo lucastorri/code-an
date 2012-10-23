@@ -87,12 +87,13 @@ package object parsers {
                 val title = (i \ "title").text
                 val KeyFormat(project, story) = (i \ "key").text
                 val typeOf = (i \ "type").text
+                val status = (i \ "resolution").text
                 val devs = (i \\ "customfield")
                     .filter(cf => (cf \ "customfieldname")
                     .text.contains("Developer"))
                     .headOption
                     .map(cf => (cf \\ "customfieldvalue").map(v => v.text))
-                Issue(title, project, story.toInt, typeOf, devs)
+                Issue(title, project, story.toInt, typeOf, status, devs)
             }
         }
     }

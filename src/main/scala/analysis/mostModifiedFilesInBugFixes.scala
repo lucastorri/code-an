@@ -4,7 +4,6 @@ import spark._
 import com.thoughtworks.dod._
 
 
-@Deactivated
 class MostModifiedFilesInBugFixesAnalyzer extends Analyzer {
     val desc = "Most Modified Files In Bug Fixes"
 
@@ -19,7 +18,7 @@ class MostModifiedFilesInBugFixesAnalyzer extends Analyzer {
         val jpnBugs = data.issues
             .filter { i =>
                 i.project.equalsIgnoreCase(project) && i.typeOf == "Defect"
-            } ++ sc.makeRDD(Seq(Issue("", project, 0, "Defect", None)), sc.defaultParallelism)
+            } ++ sc.makeRDD(Seq(Issue("", project, 0, "Defect", "Unresolved", None)), sc.defaultParallelism)
 
         val count = jpnCommits.cartesian(jpnBugs)
             .filter { case (c, i) => c.story.get == i.story }

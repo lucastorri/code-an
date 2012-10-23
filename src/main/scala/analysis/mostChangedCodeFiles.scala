@@ -4,6 +4,7 @@ import spark._
 import com.thoughtworks.dod._
 
 
+@Deactivated
 class MostChangedCodeFileAnalyzer extends Analyzer {
     val desc = "Code File With Biggest Number of Checkins"
 

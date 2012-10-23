@@ -37,7 +37,11 @@ case class Issue(
     project: String,
     story: Int,
     typeOf: String,
-    devs: Option[Seq[String]])
+    status: String,
+    devs: Option[Seq[String]]) {
+
+    lazy val id = "%s-%d".format(project, story)
+}
 
 case class RepoData(
     commits: RDD[Commit],
