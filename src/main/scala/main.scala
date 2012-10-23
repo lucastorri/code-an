@@ -16,7 +16,7 @@ object main {
             case _ => ("git.log", "jira.log")
         }
 
-        val sc = new SparkContext("local[2]", "code-an")
+        val sc = new SparkContext("local[4]", "code-an")
         val data = RepoData(
             sc.toRDD[Commit](gitlog),
             sc.toRDD[Issue](jiralog))
