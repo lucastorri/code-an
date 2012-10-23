@@ -9,10 +9,6 @@ import com.thoughtworks.dod.parsers._
 
 object main {
 
-    val outputSeparator = "="
-    val columnSeparator = " | "
-    val labelDataSeparator = "-"
-
     def main(args: Array[String]) {
 
         val (gitlog, jiralog) = args match {
@@ -32,21 +28,7 @@ object main {
 
         analyzersClasses.foreach { ac =>
             val an = ac.newInstance.asInstanceOf[Analyzer]
-            val r = an(data, sc)
-            println(an.desc)
-            val sizes = r.labels.map(_.size).toArray
-            r.rows.foreach { row =>
-                row.zipWithIndex.foreach { case (column, i) => sizes(i) = math.max(sizes(i), column.toString.size) }
-            }
-            val sepSize = (sizes.sum + ((sizes.size - 1) * columnSeparator.size))
-            println(outputSeparator * sepSize)
-            println(r.labels.zipWithIndex.map { case (label, i) => label.padTo(sizes(i), ' ') }.mkString(columnSeparator))
-            println(labelDataSeparator * sepSize)
-            r.rows.foreach { row =>
-                println(row.zipWithIndex.map { case (column, i) => column.toString.padTo(sizes(i), ' ') }.mkString(columnSeparator))
-            }
-            println(outputSeparator * sepSize)
-            println()
+            out.println(an.desc, an(data, sc))
         }
     }
 
