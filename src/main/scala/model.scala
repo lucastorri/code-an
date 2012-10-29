@@ -3,17 +3,27 @@ package com.thoughtworks.dod
 import spark._
 import scala.io._
 import scala.annotation._
+import java.util.Date
 
 
 case class Commit(
     hash: String,
     author: String,
-    time: Long,
+    time: Date,
     project: Option[String],
     story: Option[Int],
     message: String,
     files: List[FileChange])
 
+object Commit {
+    def apply(hash: String,
+        author: String,
+        time: Long,
+        project: Option[String],
+        story: Option[Int],
+        message: String,
+        files: List[FileChange]) : Commit = apply(hash, author, new Date(time*1000), project, story, message, files)
+}
 
 case class FileChange(
     path: String,
