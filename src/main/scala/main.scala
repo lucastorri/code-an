@@ -11,23 +11,25 @@ object main {
 
     def main(args: Array[String]) {
 
-        val (gitlog, jiralog) = args match {
-            case Array(g, j) => (g,j)
-            case _ => ("git.log", "jira.log")
-        }
+        val (gitlog, jiralog) = ("git.log", "jira.log")
 
         val sc = new SparkContext("local[4]", "code-an")
         val data = RepoData(
-            sc.toRDD[Commit](gitlog),
-            sc.toRDD[Issue](jiralog))
+            sc.toRDD(gitlog),
+            sc.toRDD(jiralog))
 
-        val reflections = new Reflections("")
-        val analyzersClasses = reflections
-            .getSubTypesOf(classOf[Analyzer])
-            .filterNot(_.isAnnotationPresent(classOf[Deactivated]))
+        val analyzersClasses = args.headOption
+            .map { className =>
+                List(Class.forName(className).asInstanceOf[Class[Analyzer]])
+            }
+            .getOrElse {
+                new Reflections("")
+                    .getSubTypesOf(classOf[Analyzer])
+                    .filterNot(_.isAnnotationPresent(classOf[Deactivated]))
+                    .toList
+            }
 
-        analyzersClasses.foreach { ac =>
-            val an = ac.newInstance.asInstanceOf[Analyzer]
+        analyzersClasses.map(_.newInstance).foreach { an =>
             out.println(an.desc, an(data, sc))
         }
     }
