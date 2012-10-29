@@ -3,7 +3,7 @@ package com.thoughtworks.dod
 import spark._
 import scala.io._
 import scala.annotation._
-import java.util.Date
+import java.util.{Date, Calendar}
 
 
 case class Commit(
@@ -13,7 +13,14 @@ case class Commit(
     project: Option[String],
     story: Option[Int],
     message: String,
-    files: List[FileChange])
+    files: List[FileChange]) {
+
+    lazy val yearMonth = {
+        val cal = Calendar.getInstance
+        cal.setTime(time)
+        (cal.get(Calendar.YEAR), cal.get(Calendar.MONTH))
+    }
+}
 
 object Commit {
     def apply(hash: String,

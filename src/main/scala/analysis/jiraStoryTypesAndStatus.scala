@@ -4,6 +4,7 @@ import spark._
 import com.thoughtworks.dod._
 
 
+@Deactivated
 class JiraStoryTypesAndStatusAnalyzer extends Analyzer {
     val desc = "Story Type / Status count"
 

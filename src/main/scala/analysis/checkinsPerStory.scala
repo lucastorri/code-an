@@ -4,6 +4,7 @@ import spark._
 import com.thoughtworks.dod._
 
 
+@Deactivated
 class CheckinsPerStoryAnalyzer extends Analyzer {
     val desc = "Checkins / Fixed Defect"
 
