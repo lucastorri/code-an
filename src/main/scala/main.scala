@@ -5,18 +5,19 @@ import SparkContext._
 import scala.collection.JavaConversions._
 import org.reflections.Reflections
 import com.thoughtworks.dod.parsers._
+import java.io.File
 
 
 object main {
 
     def main(args: Array[String]) {
 
-        val (gitlog, jiralog) = ("git.log", "jira.log")
+        val (gitLogExtension, jiraExportExtension) = (".commit", ".jira")
 
         val sc = new SparkContext("local[4]", "code-an")
         val data = RepoData(
-            sc.toRDD(gitlog),
-            sc.toRDD(jiralog))
+            sc.toRDD(filesEndingWith(gitLogExtension)),
+            sc.toRDD(filesEndingWith(jiraExportExtension)))
 
         val analyzersClasses = args.headOption
             .map { className =>
@@ -33,5 +34,8 @@ object main {
             out.println(an.desc, an(data, sc))
         }
     }
+
+    def filesEndingWith(sufix: String) =
+        new File(".").listFiles.filter(_.getName.endsWith(sufix)).map(_.getCanonicalPath)
 
 }

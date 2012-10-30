@@ -102,8 +102,10 @@ package object parsers {
         implicitly[Parser[T]].parse(inputFile)
 
     class RDDCreator(sc: SparkContext) {
-        def toRDD[T](inputFile: String)(implicit ev: Parser[T], m: Manifest[T]) : RDD[T] =
-            sc.makeRDD(ev.parse(inputFile), sc.defaultParallelism)
+        def toRDD[T](inputFiles: Seq[String])(implicit ev: Parser[T], m: Manifest[T]) : RDD[T] =
+            inputFiles
+                .map(input => sc.makeRDD(ev.parse(input), sc.defaultParallelism))
+                .reduceLeft[RDD[T]] { case (rdd1, rdd2) => rdd1 ++ rdd2 }
                 .cache
     }
     implicit def sparkContext2rddCreator(sc: SparkContext) = new RDDCreator(sc)
