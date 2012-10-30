@@ -4,33 +4,10 @@ import spark._
 import SparkContext._
 import scala.xml.XML
 import scala.io.Source
+import java.io.File
 
 
 package object parsers {
-
-    object out {
-
-        val outputSeparator = "="
-        val columnSeparator = " | "
-        val labelDataSeparator = "-"
-
-        def export(analyzerDesc: String, r: Result) = {
-            Predef.println(analyzerDesc)
-            val sizes = r.labels.map(_.size).toArray
-            r.rows.foreach { row =>
-                row.zipWithIndex.foreach { case (column, i) => sizes(i) = math.max(sizes(i), column.toString.size) }
-            }
-            val sepSize = (sizes.sum + ((sizes.size - 1) * columnSeparator.size))
-            Predef.println(outputSeparator * sepSize)
-            Predef.println(r.labels.zipWithIndex.map { case (label, i) => label.padTo(sizes(i), ' ') }.mkString(columnSeparator))
-            Predef.println(labelDataSeparator * sepSize)
-            r.rows.foreach { row =>
-                Predef.println(row.zipWithIndex.map { case (column, i) => column.toString.padTo(sizes(i), ' ') }.mkString(columnSeparator))
-            }
-            Predef.println(outputSeparator * sepSize)
-            Predef.println()
-        }
-    }
 
     trait Parser[T] {
         def parse(inputFile: String): Seq[T]
@@ -109,5 +86,14 @@ package object parsers {
                 .cache
     }
     implicit def sparkContext2rddCreator(sc: SparkContext) = new RDDCreator(sc)
+
+    class FilesFilter(dirpath: String) {
+        def filesEndingWith(sufix: String) =
+            new File(dirpath)
+                .listFiles
+                .filter(_.getName.endsWith(sufix))
+                .map(_.getCanonicalPath)
+    }
+    implicit def string2filesFilter(dirpath: String) = new FilesFilter(dirpath)
 }
 

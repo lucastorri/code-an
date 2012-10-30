@@ -4,38 +4,42 @@ import spark._
 import SparkContext._
 import scala.collection.JavaConversions._
 import org.reflections.Reflections
+import com.thoughtworks.dod.out._
 import com.thoughtworks.dod.parsers._
-import java.io.File
+import com.mosesn.pirate.Pirate
 
 
 object main {
 
+    val inputFormat = "[-a string] [-f string] [-c string] [input_folder]"
+    val (gitLogExtension, jiraExportExtension) = (".commit", ".jira")
+
     def main(args: Array[String]) {
+        val params = Pirate(inputFormat)(args).strings
 
-        val (gitLogExtension, jiraExportExtension) = (".commit", ".jira")
+        val analyzersClasses = params.get("a")
+            .map (a => Iterable(Class.forName(a).asInstanceOf[Class[Analyzer]]))
+            .getOrElse(allAnalyzers)
+        val outputFormatter = params.get("f")
+            .map(f => Class.forName(f).newInstance.asInstanceOf[OutputFormatter])
+            .getOrElse(sysout)
+        val connectionString = params.get("c")
+            .getOrElse("local[4]")
+        val inputFolder = params.get("input_folder")
+            .getOrElse(".")
 
-        val sc = new SparkContext("local[4]", "code-an")
+
+        val sc = new SparkContext(connectionString, "code-an")
         val data = RepoData(
-            sc.toRDD(filesEndingWith(gitLogExtension)),
-            sc.toRDD(filesEndingWith(jiraExportExtension)))
+            sc.toRDD(inputFolder.filesEndingWith(gitLogExtension)),
+            sc.toRDD(inputFolder.filesEndingWith(jiraExportExtension)))
 
-        val analyzersClasses = args.headOption
-            .map { className =>
-                List(Class.forName(className).asInstanceOf[Class[Analyzer]])
-            }
-            .getOrElse {
-                new Reflections("")
-                    .getSubTypesOf(classOf[Analyzer])
-                    .filterNot(_.isAnnotationPresent(classOf[Deactivated]))
-                    .toList
-            }
-
-        analyzersClasses.map(_.newInstance).foreach { an =>
-            out.export(an.desc, an(data, sc))
-        }
+        analyzersClasses.map(_.newInstance)
+            .foreach(an => outputFormatter.export(an.desc, an(data, sc)))
     }
 
-    def filesEndingWith(sufix: String) =
-        new File(".").listFiles.filter(_.getName.endsWith(sufix)).map(_.getCanonicalPath)
-
+    def allAnalyzers =
+        new Reflections("")
+            .getSubTypesOf(classOf[Analyzer])
+            .filterNot(_.isAnnotationPresent(classOf[Deactivated]))
 }
