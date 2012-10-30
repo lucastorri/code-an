@@ -31,7 +31,7 @@ object main {
             }
 
         analyzersClasses.map(_.newInstance).foreach { an =>
-            out.println(an.desc, an(data, sc))
+            out.export(an.desc, an(data, sc))
         }
     }
 

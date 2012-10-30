@@ -14,7 +14,7 @@ package object parsers {
         val columnSeparator = " | "
         val labelDataSeparator = "-"
 
-        def println(analyzerDesc: String, r: Result) = {
+        def export(analyzerDesc: String, r: Result) = {
             Predef.println(analyzerDesc)
             val sizes = r.labels.map(_.size).toArray
             r.rows.foreach { row =>
