@@ -49,7 +49,7 @@ object main {
                 .map { case ParamFormat(key, _, value) => (key, value) }
                 .toMap
             Class.forName(clazz)
-                .getConstructor(classOf[Map[String,String]])
+                .getConstructor(classOf[Map[_,_]])
                 .newInstance(paramsMap)
                 .asInstanceOf[OutputFormatter]
         case clazz =>
