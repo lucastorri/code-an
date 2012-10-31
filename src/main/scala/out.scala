@@ -7,6 +7,8 @@ import com.mongodb.casbah.commons.{MongoDBList, MongoDBObject}
 
 trait OutputFormatter {
     def export(analyzer: Analyzer, r: Result)
+
+    def close
 }
 
 object sysout extends OutputFormatter {
@@ -31,19 +33,28 @@ object sysout extends OutputFormatter {
         println(outputSeparator * sepSize)
         println()
     }
+
+    def close = {}
 }
 
-class mongodb extends OutputFormatter {
+case class MongoDBFormatter(params: Map[String, String]) extends OutputFormatter {
 
-    val mongoConn = MongoConnection()
+    def this() = this(Map())
+
+    val dbconnection = MongoConnection(
+        params.get("host").getOrElse("localhost"),
+        params.get("port").map(_.toInt).getOrElse(27017))
 
     def export(analyzer: Analyzer, r: Result) = {
         val doc = analyzer.getClass.getName
 
-        val collection = mongoConn("code-an")(doc)
+        val collection = dbconnection("code-an")(doc)
         collection.drop
         val data = r.rows.map(row => MongoDBObject(r.labels.zip(row):_*))
         collection.insert(MongoDBObject("data" -> data))
     }
+
+    def close =
+        dbconnection.close
 
 }
