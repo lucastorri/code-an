@@ -17,8 +17,8 @@ class CommitersPerWorkspacePerMonthAnalyzer extends Analyzer {
             .groupBy { case (date, author, ws) => (date, ws) }
             .map { case ((date, ws), i) => ((date, ws), i.distinct.size) }
             .toArray
-            .sortBy { case ((date, ws), checkins) => (ws, date) }
-            .map { case (((year, month), ws), checkins) => List(ws, year, (month: @switch) match { //XXX ugly as hell, but...
+            .sortBy { case ((date, ws), commiters) => (ws, date) }
+            .map { case (((year, month), ws), commiters) => List(ws, year, (month: @switch) match { //XXX ugly as hell, but...
                     case 0 => "Jan"
                     case 1 => "Feb"
                     case 2 => "Mar"
@@ -31,10 +31,10 @@ class CommitersPerWorkspacePerMonthAnalyzer extends Analyzer {
                     case 9 => "Oct"
                     case 10 => "Nov"
                     case 11 => "Dec"
-                }, checkins)
+                }, commiters)
             }
 
 
-        Result(Seq("workspace", "year", "month", "checkins"), d)
+        Result(Seq("workspace", "year", "month", "commiters"), d)
     }
 }
