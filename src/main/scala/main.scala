@@ -35,7 +35,7 @@ object main {
             sc.toRDD(inputFolder.filesEndingWith(jiraExportExtension)))
 
         analyzersClasses.map(_.newInstance)
-            .foreach(an => outputFormatter.export(an.desc, an(data, sc)))
+            .foreach(an => outputFormatter.export(an, an(data, sc)))
     }
 
     def allAnalyzers =

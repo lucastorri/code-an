@@ -1,10 +1,12 @@
 package com.thoughtworks.dod.out
 
 import com.thoughtworks.dod._
+import com.mongodb.casbah.Imports._
+import com.mongodb.casbah.commons.{MongoDBList, MongoDBObject}
 
 
 trait OutputFormatter {
-    def export(analyzerDesc: String, r: Result)
+    def export(analyzer: Analyzer, r: Result)
 }
 
 object sysout extends OutputFormatter {
@@ -13,8 +15,8 @@ object sysout extends OutputFormatter {
     val columnSeparator = " | "
     val labelDataSeparator = "-"
 
-    def export(analyzerDesc: String, r: Result) = {
-        println(analyzerDesc)
+    def export(analyzer: Analyzer, r: Result) = {
+        println(analyzer.desc)
         val sizes = r.labels.map(_.size).toArray
         r.rows.foreach { row =>
             row.zipWithIndex.foreach { case (column, i) => sizes(i) = math.max(sizes(i), column.toString.size) }
@@ -29,4 +31,19 @@ object sysout extends OutputFormatter {
         println(outputSeparator * sepSize)
         println()
     }
+}
+
+class mongodb extends OutputFormatter {
+
+    val mongoConn = MongoConnection()
+
+    def export(analyzer: Analyzer, r: Result) = {
+        val doc = analyzer.getClass.getName
+
+        val collection = mongoConn("code-an")(doc)
+        collection.drop
+        val data = r.rows.map(row => MongoDBObject(r.labels.zip(row):_*))
+        collection.insert(MongoDBObject("data" -> data))
+    }
+
 }

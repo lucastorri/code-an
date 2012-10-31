@@ -40,7 +40,7 @@ case class FileChange(
     lazy val workspace =
         Option(path)
             .filter(_.contains("/"))
-            .map(p => p.substring(0, p.indexOf("/", 1)).replaceAll("/", ""))
+            .map(p => p.substring(0, p.indexOf("/", 1)).replaceAll("/", "").replaceAll("\"", ""))
 
     def isOfType(sufix: String) : Boolean =
         path.endsWith("." + sufix)
