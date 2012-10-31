@@ -51,7 +51,7 @@ case class MongoDBFormatter(params: Map[String, String]) extends OutputFormatter
         val collection = dbconnection("code-an")(doc)
         collection.drop
         val data = r.rows.map(row => MongoDBObject(r.labels.zip(row):_*))
-        collection.insert(MongoDBObject("data" -> data))
+        collection.insert(MongoDBObject("data" -> data, "desc" -> analyzer.desc))
     }
 
     def close =
