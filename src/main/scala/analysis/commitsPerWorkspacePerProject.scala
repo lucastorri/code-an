@@ -5,7 +5,7 @@ import com.thoughtworks.dod._
 
 
 class CommitsPerWorkspacePerProjectAnalyzer extends Analyzer {
-    val desc = "Checkins / Workspace / Project"
+    val desc = "Workspaces Contributions"
 
     def apply(data: RepoData, sc: SparkContext) =
         Result(Seq("workspace", "project", "checkins"),
