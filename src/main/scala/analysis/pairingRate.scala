@@ -5,21 +5,19 @@ import com.thoughtworks.dod._
 
 
 class PairingRateAnalyzer extends Analyzer {
-    val desc = "Pairing Rate per Project"
+    val desc = "Pairing"
 
     def apply(data: RepoData, sc: SparkContext) = {
-        val storiesPerPairingStatus = data.issues
-            .filter(issue => issue.project == "BLINK" && issue.status == "Fixed")
-            .groupBy(issue => issue.devs.map(devs => devs.size).orElse(Some(0)).map(_ >= 2).get)
-            .map { case (pairing, stories) => (pairing, stories.size) }
+        val d = data.issues
+            .filter(_.status == "Fixed")
+            .map(issue => (issue.project, issue.devs.map(devs => devs.size).orElse(Some(0)).map(_ >= 2).get))
+            .groupBy { case (project, pairing) => (project, pairing) }
+            .map { case ((project, pairing), stories) => (project, pairing, stories.size) }
             .toArray
+            .sortBy { case (project, pairing, nstories) => (project, pairing) }
+            .map(_.productIterator.toList)
 
-        val totalStories = storiesPerPairingStatus.foldLeft(0) { case (total, (status, nstories)) => total + nstories }
-
-
-        Result(Seq("pairing", "#stories", "%"),
-            storiesPerPairingStatus.map { case (status, nstories) =>
-                List(status, nstories, (nstories.toDouble * 100) / totalStories) })
+        Result(Seq("project", "pairing", "nstories"), d)
     }
 
 }

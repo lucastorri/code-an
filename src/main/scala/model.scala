@@ -20,6 +20,9 @@ case class Commit(
         cal.setTime(time)
         (cal.get(Calendar.YEAR), cal.get(Calendar.MONTH))
     }
+
+    lazy val id = project
+        .flatMap(p => story.map(s => "%s-%d".format(p, s)))
 }
 
 object Commit {

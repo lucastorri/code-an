@@ -4,7 +4,6 @@ import spark._
 import com.thoughtworks.dod._
 
 
-@Deactivated
 class NumberOfCommitsAnalyzer extends Analyzer {
     val desc = "Total Checkins"
 

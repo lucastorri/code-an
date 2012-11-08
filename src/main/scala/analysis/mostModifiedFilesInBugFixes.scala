@@ -4,7 +4,6 @@ import spark._
 import com.thoughtworks.dod._
 
 
-@Deactivated
 class MostModifiedFilesInBugFixesAnalyzer extends Analyzer {
     val desc = "Most Modified Files In Bug Fixes"
 

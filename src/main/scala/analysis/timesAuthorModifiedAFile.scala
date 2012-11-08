@@ -4,7 +4,6 @@ import spark._
 import com.thoughtworks.dod._
 
 
-@Deactivated
 class TimesAuthorModifiedAFileAnalyzer extends Analyzer {
     val desc = "Times an author modified a same file"
 

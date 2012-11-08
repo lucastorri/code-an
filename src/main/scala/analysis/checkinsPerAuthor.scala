@@ -4,7 +4,6 @@ import spark._
 import com.thoughtworks.dod._
 
 
-@Deactivated
 class CheckinsPerAuthorAnalyzer extends Analyzer {
     val desc = "Number of Checkins / Author"
 

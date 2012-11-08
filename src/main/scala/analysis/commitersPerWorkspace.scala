@@ -4,7 +4,6 @@ import spark._
 import com.thoughtworks.dod._
 
 
-@Deactivated
 class CommitersPerWorkspaceAnalyzer extends Analyzer {
     val desc = "Commiters / Workspace"
 

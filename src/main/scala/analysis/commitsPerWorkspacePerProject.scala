@@ -4,7 +4,6 @@ import spark._
 import com.thoughtworks.dod._
 
 
-@Deactivated
 class CommitsPerWorkspacePerProjectAnalyzer extends Analyzer {
     val desc = "Checkins / Workspace / Project"
 
