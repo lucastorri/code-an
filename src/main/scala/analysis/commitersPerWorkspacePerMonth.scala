@@ -6,7 +6,7 @@ import scala.annotation.switch
 
 
 class CommitersPerWorkspacePerMonthAnalyzer extends Analyzer {
-    val desc = "Commiters / Month / Workspace"
+    val desc = "Unique Commiters per Month"
 
     def apply(data: RepoData, sc: SparkContext) = {
 
