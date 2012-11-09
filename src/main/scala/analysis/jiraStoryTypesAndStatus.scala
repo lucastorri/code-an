@@ -5,8 +5,6 @@ import com.thoughtworks.dod._
 
 
 class JiraStoryTypesAndStatusAnalyzer extends Analyzer {
-    val desc = "Story Type / Status count"
-
     def apply(data: RepoData, sc: SparkContext) =
         Result(Seq("type", "status", "total"),
             data.issues

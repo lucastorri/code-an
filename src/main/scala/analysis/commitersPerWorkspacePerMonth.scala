@@ -6,11 +6,7 @@ import scala.annotation.switch
 
 
 class CommitersPerWorkspacePerMonthAnalyzer extends Analyzer {
-    val desc = "Unique Commiters per Month"
-
     def apply(data: RepoData, sc: SparkContext) = {
-
-
 
         val d = data.commits
             .flatMap { case c => c.files.flatMap(fc => fc.workspace).map(ws => (c.yearMonth, c.author, ws)) }

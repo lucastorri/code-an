@@ -5,8 +5,6 @@ import com.thoughtworks.dod._
 
 
 class CheckinsPerProjectAnalyzer extends Analyzer {
-    val desc = "Checkins / Project"
-
     def apply(data: RepoData, sc: SparkContext) =
         Result(Seq("project", "checkins"),
             data.commits

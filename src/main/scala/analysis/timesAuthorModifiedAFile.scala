@@ -5,8 +5,6 @@ import com.thoughtworks.dod._
 
 
 class TimesAuthorModifiedAFileAnalyzer extends Analyzer {
-    val desc = "Times an author modified a same file"
-
     def apply(data: RepoData, sc: SparkContext) =
         Result(Seq("file", "author", "checkins"),
             data.commits

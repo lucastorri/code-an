@@ -6,8 +6,6 @@ import scala.annotation.switch
 
 
 class StoriesThatTouchedSpecificFileshAnalyzer extends Analyzer {
-    val desc = "Stories that touched given files"
-
     def apply(data: RepoData, sc: SparkContext) = {
         val filenames = List(
             "ProductUpdateController",

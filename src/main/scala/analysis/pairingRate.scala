@@ -5,8 +5,6 @@ import com.thoughtworks.dod._
 
 
 class PairingRateAnalyzer extends Analyzer {
-    val desc = "Pairing"
-
     def apply(data: RepoData, sc: SparkContext) = {
         val d = data.issues
             .filter(_.status == "Fixed")

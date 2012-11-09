@@ -5,8 +5,6 @@ import com.thoughtworks.dod._
 
 
 class CommitersPerWorkspaceAnalyzer extends Analyzer {
-    val desc = "Commiters / Workspace"
-
     def apply(data: RepoData, sc: SparkContext) = {
 
         val d = data.commits

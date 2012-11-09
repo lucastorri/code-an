@@ -68,9 +68,6 @@ case class RepoData(
     issues: RDD[Issue])
 
 trait Analyzer {
-
-    def desc: String
-
     def apply(data: RepoData, sc: SparkContext) : Result
 }
 

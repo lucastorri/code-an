@@ -5,8 +5,6 @@ import com.thoughtworks.dod._
 
 
 class MostModifiedFilesInBugFixesAnalyzer extends Analyzer {
-    val desc = "Most Modified Files In Bug Fixes"
-
     def apply(data: RepoData, sc: SparkContext) = {
         val project = "JPN"
 

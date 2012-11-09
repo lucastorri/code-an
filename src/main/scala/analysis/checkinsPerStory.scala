@@ -5,8 +5,6 @@ import com.thoughtworks.dod._
 
 
 class CheckinsPerStoryAnalyzer extends Analyzer {
-    val desc = "Checkins / Fixed Defect"
-
     def apply(data: RepoData, sc: SparkContext) = {
         val project = "JPN"
 

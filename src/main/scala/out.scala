@@ -18,7 +18,7 @@ object sysout extends OutputFormatter {
     val labelDataSeparator = "-"
 
     def export(analyzer: Analyzer, r: Result) = {
-        println(analyzer.desc)
+        println(analyzer.getClass.getName)
         val sizes = r.labels.map(_.size).toArray
         r.rows.foreach { row =>
             row.zipWithIndex.foreach { case (column, i) => sizes(i) = math.max(sizes(i), column.toString.size) }
@@ -46,12 +46,12 @@ case class MongoDBFormatter(params: Map[String, String]) extends OutputFormatter
         params.get("port").map(_.toInt).getOrElse(27017))
 
     def export(analyzer: Analyzer, r: Result) = {
-        val doc = analyzer.getClass.getName
+        val collectionName = analyzer.getClass.getName
 
-        val collection = dbconnection("code-an")(doc)
+        val collection = dbconnection("code-an")(collectionName)
         collection.drop
         val data = r.rows.map(row => MongoDBObject(r.labels.zip(row):_*))
-        collection.insert(MongoDBObject("data" -> data, "desc" -> analyzer.desc))
+        collection.insert(data:_*)
     }
 
     def close =

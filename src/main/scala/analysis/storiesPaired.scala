@@ -5,8 +5,6 @@ import com.thoughtworks.dod._
 
 
 class StoriesPairedAnalyzer extends Analyzer {
-    val desc = "Commiter Work Mode per Project"
-
     def apply(data: RepoData, sc: SparkContext) = {
         val blinkFixedStories = data.issues
             .filter(issue => issue.project == "BLINK" && issue.status == "Fixed")
